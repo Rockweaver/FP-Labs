@@ -138,23 +138,22 @@ moves P1 board = [] ++ mapMaybe (possMov X board) [1..9]
 moves P2 board = [] ++ mapMaybe (possMov O board) [1..9]
 
 -- | Gametree generation
-
 -- Exercise 9
--- checkWinner :: Board -> Field -> Bool
--- checkWinner ((a,b,c),(d,e,f),(g,h,i)) field | a == b && b == c && c == field = True -- abc 
---                                             | d == e && e == f && f == field = True -- def
---                                             | g == h && h == i && i == field = True -- ghi
---                                             | a == d && d == g && g == field = True -- adg
---                                             | b == e && e == h && h == field = True -- beh
---                                             | c == f && f == i && i == field = True -- cfi
---                                             | a == e && e == i && i == field = True -- aei
---                                             | c == e && e == g && g == field = True -- ceg
+checkWinner :: Board -> Field -> Bool
+checkWinner ((a,b,c),(d,e,f),(g,h,i)) field | a == b && b == c && c == field = True -- abc 
+                                            | d == e && e == f && f == field = True -- def
+                                            | g == h && h == i && i == field = True -- ghi
+                                            | a == d && d == g && g == field = True -- adg
+                                            | b == e && e == h && h == field = True -- beh
+                                            | c == f && f == i && i == field = True -- cfi
+                                            | a == e && e == i && i == field = True -- aei
+                                            | c == e && e == g && g == field = True -- ceg
+                                            | otherwise = False
 
 hasWinner :: Board -> Maybe Player
-hasWinner = undefined
---  board | checkWinner board X = Just P1
---                 | checkWinner board O = Just P2
---                 | otherwise Nothing
+hasWinner board | checkWinner board X = Just P1
+                | checkWinner board O = Just P2
+                | otherwise = Nothing
 
 -- Exercise 10
 
