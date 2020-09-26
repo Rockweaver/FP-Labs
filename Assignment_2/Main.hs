@@ -112,13 +112,30 @@ printBoard ((a,b,c),(d,e,f),(g,h,i)) = retS a ++ "|" ++ retS b ++ "|" ++ retS c 
 
 -- | Move generation
              
--- Exercise 8
-possiblePlaces :: Field -> Board -> [Board]
-possiblePlaces f ((a,b,c),(d,e,f),(g,h,i)) = 
+-- -- Exercise 8
+-- possiblePlaces :: Field -> Board -> [Board]
+-- possiblePlaces f ((a,b,c),(d,e,f),(g,h,i)) = 
 
+-- moves :: Player -> Board -> [Board]
+-- moves P1 board = possiblePlaces X board
+-- moves P2 board = possiblePlaces O board
+
+-- Exercise 8
+possMov :: Field -> Board -> Int -> Maybe Board
+possMov pIcon ((a,b,c),(d,e,f),(g,h,i)) x | x == 1 && a == B = Just ((pIcon,b,c),(d,e,f),(g,h,i))
+                                          | x == 2 && b == B = Just ((a,pIcon,c),(d,e,f),(g,h,i))
+                                          | x == 3 && c == B = Just ((a,b,pIcon),(d,e,f),(g,h,i))
+                                          | x == 4 && d == B = Just ((a,b,c),(pIcon,e,f),(g,h,i))
+                                          | x == 5 && e == B = Just ((a,b,c),(d,pIcon,f),(g,h,i))
+                                          | x == 6 && f == B = Just ((a,b,c),(d,e,pIcon),(g,h,i))
+                                          | x == 7 && g == B = Just ((a,b,c),(d,e,f),(pIcon,h,i))
+                                          | x == 8 && h == B = Just ((a,b,c),(d,e,f),(g,pIcon,i))
+                                          | x == 9 && i == B = Just ((a,b,c),(d,e,f),(g,h,pIcon))
+                                          | otherwise = Nothing
+                                       
 moves :: Player -> Board -> [Board]
-moves P1 board = possiblePlaces X board
-moves P2 board = possiblePlaces O board
+moves P1 board = [] ++ mapMaybe (possMov X board) [1..9]
+moves P2 board = [] ++ mapMaybe (possMov O board) [1..9]
 
 -- | Gametree generation
 
