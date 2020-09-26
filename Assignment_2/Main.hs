@@ -159,7 +159,7 @@ hasWinner board | checkWinner board X = Just P1
 
 gameTree :: Player -> Board -> Rose Board
 gameTree player board | hasWinner board == Nothing = MkRose board ([] ++ map (gameTree (nextPlayer player))(moves player board))
-                      | otherwise = MkRose board ([] ++ map (gameTree (nextPlayer player))(moves player board))
+                      | otherwise = MkRose board []
                     
 
 
