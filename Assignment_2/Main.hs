@@ -8,7 +8,8 @@
 
 -}
 
-module Assignment2 where -- Rename to "Main" if you want to compile the game.
+module Main where -- Origional name == Assignment2
+                         -- Rename to "Main" if you want to compile the game.
                          -- Don't forget to rename it back when submitting!
 
 import Control.Monad
@@ -27,18 +28,20 @@ data Rose a = MkRose a [Rose a]
 -- Exercise 1
 
 root :: Rose a -> a
-root (Rose x _) = x
+root (MkRose x _) = x
 
 children :: Rose a -> [Rose a]
-children = undefined -- (Rose _ xs) = xs 
+children (MkRose _ xs) = xs 
 
 -- Exercise 2
 
 size :: Rose a -> Int
-size = undefined -- (Rose _ xs) = 1 + map (size) xs
+size (MkRose _ []) = 1
+size (MkRose _ xs) = 1 + sum(map (size) xs)
 
 leaves :: Rose a -> Int
-leaves = undefined
+leaves (MkRose _ []) = 1
+leaves (MkRose _ xs) = 0 + sum(map (leaves) xs)
 
 -- | State representation
 
@@ -54,7 +57,8 @@ instance Show Player where
 -- Exercise 3
     
 nextPlayer :: Player -> Player
-nextPlayer = undefined
+nextPlayer P1 = P2
+nextPlayer P2 = P1
 
 -- * Board
 
@@ -69,35 +73,52 @@ instance Show Field where
 -- Exercise 4
 
 symbol :: Player -> Field
-symbol = undefined
+symbol P1 = X
+symbol P2 = O
 
 type Row   = (Field, Field, Field)
 type Board = (Row, Row, Row)
 
 -- Exercise 5
 
+transpose3 :: ((a,b,c), (d,e,f), (g,h,i)) -> ((a,d,g), (b,e,h), (c,f,i))
+transpose3 ((a,b,c), (d,e,f), (g,h,i)) = ((a,d,g), (b,e,h), (c,f,i))
+
 verticals :: Board -> (Row, Row, Row)
-verticals = undefined
+verticals x = transpose3 x
+
+getDiagonals :: ((a,b,c), (d,e,f), (g,h,i)) -> ((a,e,i),(c,e,g))
+getDiagonals ((a,b,c), (d,e,f), (g,h,i)) = ((a,e,i),(c,e,g))
 
 diagonals :: Board -> (Row, Row)
-diagonals = undefined
+diagonals x = getDiagonals x
+
 
 -- Exercise 6
 
 emptyBoard :: Board
-emptyBoard = undefined
+emptyBoard = ((B,B,B),(B,B,B),(B,B,B))
 
 -- Exercise 7
+retS :: Field -> String
+retS X = "X"
+retS O = "O"
+retS B = " "
 
 printBoard :: Board -> String
-printBoard = undefined
+printBoard ((a,b,c),(d,e,f),(g,h,i)) = retS a ++ "|" ++ retS b ++ "|" ++ retS c ++ "\n-+-+-\n" ++
+                                       retS d ++ "|" ++ retS e ++ "|" ++ retS f ++ "\n-+-+-\n" ++
+                                       retS g ++ "|" ++ retS h ++ "|" ++ retS i ++ "\n"
 
 -- | Move generation
              
 -- Exercise 8
-             
+possiblePlaces :: Field -> Board -> [Board]
+possiblePlaces f ((a,b,c),(d,e,f),(g,h,i)) = 
+
 moves :: Player -> Board -> [Board]
-moves = undefined
+moves P1 board = possiblePlaces X board
+moves P2 board = possiblePlaces O board
 
 -- | Gametree generation
 
