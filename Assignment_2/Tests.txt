@@ -1,0 +1,13 @@
+:load Main.hs
+root (MkRose 1 [MkRose 2 [MkRose 21 [], MkRose 22 []], MkRose 3 [], MkRose 4 []]) == 1
+children (MkRose 1 [MkRose 2 [MkRose 21 [], MkRose 22 []], MkRose 3 [], MkRose 4 []]) == [MkRose 2 [MkRose 21 [],MkRose 22 []],MkRose 3 [],MkRose 4 []]
+size (MkRose 1 [MkRose 2 [MkRose 21 [], MkRose 22 []], MkRose 3 [], MkRose 4 []]) == 6
+leaves (MkRose 1 [MkRose 2 [MkRose 21 [], MkRose 22 []], MkRose 3 [], MkRose 4 []])  == 4
+nextPlayer P1 == P2
+nextPlayer P2 == P1
+symbol P1 == X
+symbol P2 == O
+verticals ((X, O, B),(O, B, X),(B, X, O))
+diagonals ((X, O, B),(O, B, X),(B, X, O))
+emptyBoard
+printBoard ((X, O, B),(O, B, X),(B, X, O)) == "X|O| \n-+-+-\nO| |X\n-+-+-\n |X|O\n"
