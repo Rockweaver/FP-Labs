@@ -12,6 +12,7 @@ diagonals ((X, O, B),(O, B, X),(B, X, O))
 emptyBoard
 printBoard ((X, O, B),(O, B, X),(B, X, O)) == "X|O| \n-+-+-\nO| |X\n-+-+-\n |X|O\n"
 moves P1 ((X, O, B),(O, B, X),(B, X, O))
+moves P1 ((B, B, B),(B, B, B),(B, B, B))
 hasWinner ((B,B,B),(B,B,B),(B,B,B))
 hasWinner ((X,X,X),(B,B,B),(B,B,B))
 hasWinner ((B,B,B),(O,O,O),(B,B,B))
