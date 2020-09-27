@@ -31,7 +31,7 @@ root :: Rose a -> a
 root (MkRose x _) = x
 
 children :: Rose a -> [Rose a]
-children (MkRose _ xs) = xs 
+children (MkRose _ xs) = xs
 
 -- Exercise 2
 
@@ -53,9 +53,9 @@ data Player = P1 | P2
 instance Show Player where
     show P1 = "Player 1"
     show P2 = "Player 2"
-    
+
 -- Exercise 3
-    
+
 nextPlayer :: Player -> Player
 nextPlayer P1 = P2
 nextPlayer P2 = P1
@@ -111,14 +111,6 @@ printBoard ((a,b,c),(d,e,f),(g,h,i)) = retS a ++ "|" ++ retS b ++ "|" ++ retS c 
                                        retS g ++ "|" ++ retS h ++ "|" ++ retS i ++ "\n"
 
 -- | Move generation
-             
--- -- Exercise 8
--- possiblePlaces :: Field -> Board -> [Board]
--- possiblePlaces f ((a,b,c),(d,e,f),(g,h,i)) = 
-
--- moves :: Player -> Board -> [Board]
--- moves P1 board = possiblePlaces X board
--- moves P2 board = possiblePlaces O board
 
 -- Exercise 8
 possMov :: Field -> Board -> Int -> Maybe Board
@@ -132,7 +124,7 @@ possMov pIcon ((a,b,c),(d,e,f),(g,h,i)) x | x == 1 && a == B = Just ((pIcon,b,c)
                                           | x == 8 && h == B = Just ((a,b,c),(d,e,f),(g,pIcon,i))
                                           | x == 9 && i == B = Just ((a,b,c),(d,e,f),(g,h,pIcon))
                                           | otherwise = Nothing
-                                       
+
 moves :: Player -> Board -> [Board]
 moves P1 board = [] ++ mapMaybe (possMov X board) [1..9]
 moves P2 board = [] ++ mapMaybe (possMov O board) [1..9]
@@ -140,7 +132,7 @@ moves P2 board = [] ++ mapMaybe (possMov O board) [1..9]
 -- | Gametree generation
 -- Exercise 9
 checkWinner :: Board -> Field -> Bool
-checkWinner ((a,b,c),(d,e,f),(g,h,i)) field | a == b && b == c && c == field = True -- abc 
+checkWinner ((a,b,c),(d,e,f),(g,h,i)) field | a == b && b == c && c == field = True -- abc
                                             | d == e && e == f && f == field = True -- def
                                             | g == h && h == i && i == field = True -- ghi
                                             | a == d && d == g && g == field = True -- adg
@@ -160,7 +152,7 @@ hasWinner board | checkWinner board X = Just P1
 gameTree :: Player -> Board -> Rose Board
 gameTree player board | hasWinner board == Nothing = MkRose board ([] ++ map (gameTree (nextPlayer player))(moves player board))
                       | otherwise = MkRose board []
-                    
+
 
 
 -- | Game complexity
@@ -168,31 +160,49 @@ gameTree player board | hasWinner board == Nothing = MkRose board ([] ++ map (ga
 -- Exercise 11
 
 gameTreeComplexity :: Int
-gameTreeComplexity = undefined
+gameTreeComplexity = 255168
 
 -- | Minimax
 
 -- Exercise 12
+checkMinimaxScore :: Player -> Board -> Int
+checkMinimaxScore player board | (hasWinner board) == Nothing = 0
+                               | (hasWinner board) == Just P1 && P1 == player = 1
+                               | (hasWinner board) == Just P2 && P2 == player = 1
+                               | otherwise = -1
+
+minimax' :: Player -> Rose Board -> Rose Int
+minimax' player roseBoard | (children roseBoard) /= [] = MkRose (minimum (map root (map (minimax player)(children roseBoard)))) (map (minimax player) (children roseBoard))
+                          | (children roseBoard) == [] = MkRose (checkMinimaxScore player (root roseBoard)) []
 
 minimax :: Player -> Rose Board -> Rose Int
-minimax = undefined
+minimax player roseBoard | (children roseBoard) /= [] = MkRose (maximum (map root (map (minimax' player)(children roseBoard)))) (map (minimax' player) (children roseBoard))
+                         | (children roseBoard) == [] = MkRose (checkMinimaxScore player (root roseBoard)) []
 
 -- * Lazier minimum and maximums
 
 -- Exercise 13
 
 minimum' :: [Int] -> Int
-minimum' = undefined
+minimum' (x:xs:xss) | x == (-1) = (-1)
+                    | ([xs] ++ xss) == [] = x
+                    | x <= xs = minimum' ([x] ++ xss)
+                    | otherwise = minimum' ([xs] ++ xss)
 
 maximum' :: [Int] -> Int
-maximum' = undefined
+maximum' (x:xs:xss) | x == 1 || xs == 1 = 1
+                    | ([xs] ++ xss) == [] = x
+                    | x >= xs = maximum' ([x] ++ xss)
+                    | otherwise = maximum' ([xs] ++ xss)
 
 -- | Gameplay
 
 -- Exercise 14
+choose :: [Board] -> Maybe Board
+choose (x:xs) = Just x
 
 makeMove :: Player -> Board -> Maybe Board
-makeMove = undefined
+makeMove player board = choose (moves player board)
 
 -- | Main
 
@@ -209,7 +219,7 @@ main = do
     typeOfP2 <- askFor "Should Player 2 be a (H)uman or a (C)omputer player?"
                        [Human, Computer]
 
-    let playerType :: Player -> PlayerType 
+    let playerType :: Player -> PlayerType
         playerType P1 = typeOfP1
         playerType P2 = typeOfP2
 
@@ -248,7 +258,7 @@ main = do
                     . map (intercalate "    ")
                     . transpose
                     . map lines
-                    . map (\(i,b) -> "(" ++ show i ++ "): \n" ++ printBoard b) 
+                    . map (\(i,b) -> "(" ++ show i ++ "): \n" ++ printBoard b)
                     . zip [1 :: Integer ..]
 
     gameLoop P1 emptyBoard

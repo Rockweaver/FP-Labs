@@ -16,3 +16,5 @@ moves P1 ((B, B, B),(B, B, B),(B, B, B))
 hasWinner ((B,B,B),(B,B,B),(B,B,B))
 hasWinner ((X,X,X),(B,B,B),(B,B,B))
 hasWinner ((B,B,B),(O,O,O),(B,B,B))
+
+minimax P1 (gameTree P1 emptyBoard)
