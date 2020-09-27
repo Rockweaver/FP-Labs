@@ -198,11 +198,19 @@ maximum' (x:xs:xss) | x == 1 || xs == 1 = 1
 -- | Gameplay
 
 -- Exercise 14
-choose :: [Board] -> Maybe Board
-choose (x:xs) = Just x
 
 makeMove :: Player -> Board -> Maybe Board
-makeMove player board = choose (moves player board)
+makeMove player board = undefined -- geen sum doen, hou het bij -1,0,1
+
+-- createPointTree :: Rose Int -> Rose Int
+-- createPointTree rose | (children rose) /= [] = MkRose (sum (map(root) (children rose))) ([] ++ (map createPointTree (children rose)))
+--                      | otherwise = MkRose (root rose) []
+
+-- chooseBest :: Rose Int -> Maybe Board
+-- chooseBest pointTree = elemIndex (maximum (children pointTree)) (children pointTree)
+
+-- makeMove :: Player -> Board -> Maybe Board
+-- makeMove player board = chooseBest (createPointTree (minimax player (gameTree player board))
 
 -- | Main
 
