@@ -172,45 +172,55 @@ checkMinimaxScore player board | (hasWinner board) == Nothing = 0
                                | otherwise = -1
 
 minimax' :: Player -> Rose Board -> Rose Int
-minimax' player roseBoard | (children roseBoard) /= [] = MkRose (minimum (map root (map (minimax player)(children roseBoard)))) (map (minimax player) (children roseBoard))
+minimax' player roseBoard | (children roseBoard) /= [] = MkRose (minimum' (map root (map (minimax player)(children roseBoard)))) (map (minimax player) (children roseBoard))
                           | (children roseBoard) == [] = MkRose (checkMinimaxScore player (root roseBoard)) []
 
 minimax :: Player -> Rose Board -> Rose Int
-minimax player roseBoard | (children roseBoard) /= [] = MkRose (maximum (map root (map (minimax' player)(children roseBoard)))) (map (minimax' player) (children roseBoard))
+minimax player roseBoard | (children roseBoard) /= [] = MkRose (maximum' (map root (map (minimax' player)(children roseBoard)))) (map (minimax' player) (children roseBoard))
                          | (children roseBoard) == [] = MkRose (checkMinimaxScore player (root roseBoard)) []
 
 -- * Lazier minimum and maximums
 
 -- Exercise 13
 
+checkNextMin :: Int -> [Int] -> [Int]
+checkNextMin x (xs:xss) | x < xs = ([x] ++ xss)
+                        | otherwise = ([xs] ++ xss)
+
 minimum' :: [Int] -> Int
-minimum' (x:xs:xss) | x == (-1) = (-1)
-                    | ([xs] ++ xss) == [] = x
-                    | x <= xs = minimum' ([x] ++ xss)
-                    | otherwise = minimum' ([xs] ++ xss)
+minimum' (x:xs) | x == (-1) = (-1)
+                | xs == [] = x
+                | otherwise = minimum' (checkNextMin x xs)
+
+
+
+                -- | ([xs] ++ xss) == [] = x
+                -- | x <= xs = minimum' ([x] ++ xss)
+                -- | otherwise = minimum' ([xs] ++ xss)
+checkNextMax :: Int -> [Int] -> [Int]
+checkNextMax x (xs:xss) | x > xs = ([x] ++ xss)
+                        | otherwise = ([xs] ++ xss)
 
 maximum' :: [Int] -> Int
-maximum' (x:xs:xss) | x == 1 || xs == 1 = 1
-                    | ([xs] ++ xss) == [] = x
-                    | x >= xs = maximum' ([x] ++ xss)
-                    | otherwise = maximum' ([xs] ++ xss)
+maximum' (x:xs) | x == 1 = 1
+                | xs == [] = x
+                | otherwise = maximum' (checkNextMax x xs)
 
 -- | Gameplay
 
 -- Exercise 14
 
+maybeIntToInt :: Maybe Int -> Int
+maybeIntToInt (Just n) = n
+maybeIntToInt _ = 420
+
+indexHighest :: Player -> Board -> Int
+indexHighest player board = maybeIntToInt (elemIndex (maximum (map root (children (minimax player (gameTree player board))))) (map root (children (minimax player (gameTree player board)))))
+
 makeMove :: Player -> Board -> Maybe Board
-makeMove player board = undefined -- geen sum doen, hou het bij -1,0,1
-
--- createPointTree :: Rose Int -> Rose Int
--- createPointTree rose | (children rose) /= [] = MkRose (sum (map(root) (children rose))) ([] ++ (map createPointTree (children rose)))
---                      | otherwise = MkRose (root rose) []
-
--- chooseBest :: Rose Int -> Maybe Board
--- chooseBest pointTree = elemIndex (maximum (children pointTree)) (children pointTree)
-
--- makeMove :: Player -> Board -> Maybe Board
--- makeMove player board = chooseBest (createPointTree (minimax player (gameTree player board))
+makeMove player board | (hasWinner board) /= Nothing = Nothing
+                      | (moves player board) /= [] = Just ((map root (children (gameTree player board)))!!(indexHighest player board))
+                      | otherwise = Nothing
 
 -- | Main
 
