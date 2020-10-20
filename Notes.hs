@@ -116,3 +116,6 @@ instance Eq a => Eq (Tree a) where
 -- define your own datatypes, it is easy and really easy to use/read
 data Status = Stopped | Running
 
+mapTree :: (a -> b) -> Tree a -> Tree be
+mapTree f Leaf = Leaf
+mapTree f (Node lt v rt) = Node (...) (...) (...)

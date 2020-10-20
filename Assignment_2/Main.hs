@@ -8,7 +8,7 @@
 
 -}
 
-module Main where -- Origional name == Assignment2
+module Assignment2 where -- Origional name == Assignment2
                          -- Rename to "Main" if you want to compile the game.
                          -- Don't forget to rename it back when submitting!
 
@@ -61,7 +61,6 @@ nextPlayer P1 = P2
 nextPlayer P2 = P1
 
 -- * Board
-
 data Field = X | O | B
     deriving (Eq, Ord)
 
@@ -172,50 +171,41 @@ checkMinimaxScore player board | (hasWinner board) == Nothing = 0
                                | otherwise = -1
 
 minimax' :: Player -> Rose Board -> Rose Int
-minimax' player roseBoard | (children roseBoard) /= [] = MkRose (minimum' (map root (map (minimax player)(children roseBoard)))) (map (minimax player) (children roseBoard))
-                          | (children roseBoard) == [] = MkRose (checkMinimaxScore player (root roseBoard)) []
+minimax' player roseBoard | (children roseBoard) /= [] = MkRose (minimum' (map root (map (minimax player)(children roseBoard)))) (map (minimax player) (children roseBoard)) -- create Tree met root hoogste child en children recursief ook een tree laten maken
+                          | (children roseBoard) == [] = MkRose (checkMinimaxScore player (root roseBoard)) [] -- leave dus empty children
 
 minimax :: Player -> Rose Board -> Rose Int
-minimax player roseBoard | (children roseBoard) /= [] = MkRose (maximum' (map root (map (minimax' player)(children roseBoard)))) (map (minimax' player) (children roseBoard))
-                         | (children roseBoard) == [] = MkRose (checkMinimaxScore player (root roseBoard)) []
+minimax player roseBoard | (children roseBoard) /= [] = MkRose (maximum' (map root (map (minimax' player)(children roseBoard)))) (map (minimax' player) (children roseBoard)) -- create Tree met root hoogste child en children recursief ook een tree laten maken
+                         | (children roseBoard) == [] = MkRose (checkMinimaxScore player (root roseBoard)) [] -- leave dus empty children
 
 -- * Lazier minimum and maximums
 
 -- Exercise 13
 
 checkNextMin :: Int -> [Int] -> [Int]
-checkNextMin x (xs:xss) | x < xs = ([x] ++ xss)
+checkNextMin x (xs:xss) | x < xs = ([x] ++ xss) -- vergelijk x met xs 
                         | otherwise = ([xs] ++ xss)
 
 minimum' :: [Int] -> Int
-minimum' (x:xs) | x == (-1) = (-1)
-                | xs == [] = x
-                | otherwise = minimum' (checkNextMin x xs)
+minimum' (x:xs) | x == (-1) = (-1) -- Check eerste snel klaar
+                | xs == [] = x -- Als de rest lijst leeg is gewoon de x
+                | otherwise = minimum' (checkNextMin x xs) -- recursie
 
-
-
-                -- | ([xs] ++ xss) == [] = x
-                -- | x <= xs = minimum' ([x] ++ xss)
-                -- | otherwise = minimum' ([xs] ++ xss)
 checkNextMax :: Int -> [Int] -> [Int]
-checkNextMax x (xs:xss) | x > xs = ([x] ++ xss)
+checkNextMax x (xs:xss) | x > xs = ([x] ++ xss) -- vergelijk x met xs 
                         | otherwise = ([xs] ++ xss)
 
 maximum' :: [Int] -> Int
-maximum' (x:xs) | x == 1 = 1
-                | xs == [] = x
-                | otherwise = maximum' (checkNextMax x xs)
+maximum' (x:xs) | x == 1 = 1 -- Check eerste snel klaar
+                | xs == [] = x -- Als de rest lijst leeg is gewoon de x
+                | otherwise = maximum' (checkNextMax x xs) -- recursie
 
 -- | Gameplay
 
 -- Exercise 14
 
-maybeIntToInt :: Maybe Int -> Int
-maybeIntToInt (Just n) = n
-maybeIntToInt _ = 420
-
 indexHighest :: Player -> Board -> Int
-indexHighest player board = maybeIntToInt (elemIndex (maximum (map root (children (minimax player (gameTree player board))))) (map root (children (minimax player (gameTree player board)))))
+indexHighest player board = fromMaybe 0 (elemIndex (maximum (map root (children (minimax player (gameTree player board))))) (map root (children (minimax player (gameTree player board)))))
 
 makeMove :: Player -> Board -> Maybe Board
 makeMove player board | (hasWinner board) /= Nothing = Nothing
