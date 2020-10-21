@@ -1,0 +1,3 @@
+:load Main.hs
+fmap (+1) (MkRose 1 [MkRose 2 [MkRose 21 [], MkRose 22 []], MkRose 3 [], MkRose 4 []]) == (MkRose 2 [MkRose 3 [MkRose 22 [],MkRose 23 []],MkRose 4 [],MkRose 5 []]) &&
+

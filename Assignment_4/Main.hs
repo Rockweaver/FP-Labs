@@ -22,7 +22,9 @@ data Rose a = MkRose a [Rose a]
 -- * Exercise 1
 
 instance Functor Rose where
-    fmap = undefined
+    -- fmap :: (a -> b) -> f a -> f b
+    fmap f (MkRose root []) = MkRose (f root) []
+    fmap f (MkRose root children) = MkRose (f root) (map (fmap f) children) 
 
 class Monoid a where
     mempty ::           a
@@ -42,8 +44,8 @@ instance Num a => Monoid (Sum a) where
 -- * Exercise 2
 
 instance Num a => Monoid (Product a) where
-    mempty = undefined
-    (<>)   = undefined
+    mempty = Product 0
+    Product n1 <> Product n2 = Product (n1 * n2) 
 
 class Functor f => Foldable f where
     fold    :: Monoid m =>             f m -> m
