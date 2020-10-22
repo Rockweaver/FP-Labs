@@ -3,8 +3,17 @@ fmap (+1) (MkRose 1 [MkRose 2 [MkRose 21 [], MkRose 22 []], MkRose 3 [], MkRose 
 
 show (Card { rank = R3, suit = H})
 
-fullDeck
-piquetDeck
-
 sameSuits ((Hand {unHand = [(Card { rank = R3, suit = H}), (Card { rank = R5, suit = H}), (Card { rank = R10, suit = H})]})) == True
 sameSuits ((Hand {unHand = [(Card { rank = R3, suit = H}), (Card { rank = R5, suit = D}), (Card { rank = R10, suit = H})]})) == False
+
+isStraight [R2,R3,R4,R5,R6]
+isStraight [R9,R10,J,Q,K]
+isStraight [R9,R10,J,Q,A]
+
+ranks ((Hand {unHand = [(Card { rank = R8, suit = H}), (Card { rank = R5, suit = H}), (Card { rank = R4, suit = H}), (Card { rank = R6, suit = H}), (Card { rank = R7, suit = H})]}))
+ranks ((Hand {unHand = [(Card { rank = K, suit = H}), (Card { rank = R5, suit = H}), (Card { rank = Q, suit = H}), (Card { rank = R6, suit = H}), (Card { rank = R7, suit = H})]}))
+ranks ((Hand {unHand = [(Card { rank = R7, suit = H}), (Card { rank = R7, suit = D}), (Card { rank = Q, suit = S}), (Card { rank = R7, suit = S}), (Card { rank = Q, suit = H})]}))
+
+count (ranks ((Hand {unHand = [(Card { rank = R7, suit = H}), (Card { rank = R7, suit = D}), (Card { rank = Q, suit = S}), (Card { rank = R7, suit = S}), (Card { rank = Q, suit = H})]})))
+
+order ((Hand {unHand = [(Card { rank = R7, suit = H}), (Card { rank = R7, suit = D}), (Card { rank = Q, suit = S}), (Card { rank = R7, suit = S}), (Card { rank = Q, suit = H})]}))

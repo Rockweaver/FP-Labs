@@ -50,7 +50,7 @@ instance Num a => Monoid (Sum a) where
 -- * Exercise 2
 
 instance Num a => Monoid (Product a) where
-    mempty = Product 0
+    mempty = Product 1
     Product n1 <> Product n2 = Product (n1 * n2) 
 
 class Functor f => Foldable f where
@@ -140,24 +140,36 @@ sameSuits :: Hand -> Bool
 sameSuits (Hand {unHand = (x:xs)}) = all (==(suit x)) (map suit xs) 
 
 -- * Exercise 10
+checkStraight :: [Rank] -> [Rank] -> Bool
+checkStraight hand y@(ys:yss)   | length y < 5 = False
+                                | hand == (take 5 y) = True
+                                | otherwise = checkStraight hand yss
+
 
 isStraight :: [Rank] -> Maybe Rank
-isStraight x = undefined -- | (sort x) == [(head x)..((head x)+4)] = Just 2
+isStraight x | (checkStraight x ([A] ++ (enumFrom R2))) = return (head (reverse x))--(head (reverse x)))
+             | otherwise = Nothing
+
 
 -- * Exercise 11
 
 ranks :: Hand -> [Rank]
-ranks = undefined
+ranks (Hand {unHand = x}) = sort ([] ++ map rank x)
 
 -- * Exercise 12
-
 order :: Hand -> [(Int, Rank)]
-order = undefined
+order x = zip (n (ranks x)) (m (ranks x)) 
+            where   n :: [Rank] -> [Int]
+                    n xn = map length (group xn)
+                    m :: [Rank] -> [Rank]
+                    m xm = map head (group xm)
 
 -- * Exercise 13
+-- checkCategory :: [(Int, Rank)] -> HandCategory
+-- checkCategory x = unzip x
 
-handCategory :: Hand -> HandCategory
-handCategory = undefined
+-- handCategory :: Hand -> HandCategory
+-- handCategory hand = checkCategory (order hand)
 
 -- * Exercise 14
 
