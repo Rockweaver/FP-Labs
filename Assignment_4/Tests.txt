@@ -1,3 +1,10 @@
 :load Main.hs
 fmap (+1) (MkRose 1 [MkRose 2 [MkRose 21 [], MkRose 22 []], MkRose 3 [], MkRose 4 []]) == (MkRose 2 [MkRose 3 [MkRose 22 [],MkRose 23 []],MkRose 4 [],MkRose 5 []]) &&
 
+show (Card { rank = R3, suit = H})
+
+fullDeck
+piquetDeck
+
+sameSuits ((Hand {unHand = [(Card { rank = R3, suit = H}), (Card { rank = R5, suit = H}), (Card { rank = R10, suit = H})]})) == True
+sameSuits ((Hand {unHand = [(Card { rank = R3, suit = H}), (Card { rank = R5, suit = D}), (Card { rank = R10, suit = H})]})) == False

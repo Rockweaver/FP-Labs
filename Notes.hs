@@ -116,6 +116,71 @@ instance Eq a => Eq (Tree a) where
 -- define your own datatypes, it is easy and really easy to use/read
 data Status = Stopped | Running
 
-mapTree :: (a -> b) -> Tree a -> Tree be
+-- INPUT AND OUTPUT (IO)
+
+-- Purity = referential transparency
+-- = you cna always substitute a term by its definition without change in the meaning 
+
+-- prints to console
+-- this is what happens when you add something to te console (won't work because haskell does this for you)
+putChar'' :: Char -> IO''
+putChar'' char (MkWorld t d cs k a) = MkWorld t d (c:cs) k a
+
+putStr :: String -> IO
+putStr [] = id
+putStr (c:cs) = putChar >>> putStr cs
+
+-- get from console
+type IO a = World -> (a, World)
+
+getChar' :: IO Char
+getChar' w@(MkWorld t d cs k a) = (k, w)
+
+-- Echo
+(>>=) :: IO a -> (a -> IO b) -> IO b
+(f >>= g) w = let (a, w') = f w in g a w'
+
+-- do notation
+getLine = do c <- getChar
+            case c of
+                '\n' -> return []
+                _    -> do rest <- getLine
+                           return (c : rest)
+
+
+
+
+-- START FUNCTORS AND MONADS
+
+mapTree :: (a -> b) -> Tree a -> Tree b
 mapTree f Leaf = Leaf
-mapTree f (Node lt v rt) = Node (...) (...) (...)
+mapTree f (Node lt v rt) = Node (mapTree f lt) (f v) (mapTree f rt)
+
+mapMay :: (a -> b) -> Maybe a -> Maybe b
+mapMay f Nothing = Nothing
+mapMay f (Just x) = Just (f x) 
+
+-- always ... :: (a -> b) -> f a -> f b
+
+inc :: Functor f => f Int -> f Int
+inc xs = fmap (+1) xs
+
+-- (<$>) = fmap
+
+inc :: Functor f => f Int -> f Int
+inc xs = (+1) <$> xs
+
+instance Functor ((->) r) where
+    fmap :: (a -> b) -> (r -> a) -> (r -> b) -- == :: (a -> b) -> ((->) r a) -> ((->) r b) 
+    fmap f g = f . g
+
+-- IO Functor
+instance Functor IO where
+    fmap :: (a -> b) -> IO a -> IO b
+    fmap f ia = 
+        do
+            a <- ia
+            return (f a) 
+    
+    -- == fmap f ia = ia >>+ (\a -> return (f a))
+    -- this is not a back from hell function IO Int -> b

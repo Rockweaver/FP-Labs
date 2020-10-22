@@ -19,6 +19,12 @@ import Data.Set      (Set, empty, insert)
 data Rose a = MkRose a [Rose a]
     deriving (Eq, Show)
 
+root :: Rose a -> a
+root (MkRose x _) = x
+
+children :: Rose a -> [Rose a]
+children (MkRose _ xs) = xs
+
 -- * Exercise 1
 
 instance Functor Rose where
@@ -51,7 +57,7 @@ class Functor f => Foldable f where
     fold    :: Monoid m =>             f m -> m
     foldMap :: Monoid m => (a -> m) -> f a -> m
     -- * Exercise 4
-    foldMap = undefined
+    foldMap f x = undefined -- fmap fold (fmap (f) x)
 
 instance Foldable [] where
     fold = foldr (<>) mempty
@@ -59,13 +65,14 @@ instance Foldable [] where
 -- * Exercise 3
 
 instance Foldable Rose where
-    fold = undefined
+    fold (MkRose root []) = root
+    fold (MkRose root children) = root
 
 -- * Exercise 5
 
 fsum, fproduct :: (Foldable f, Num a) => f a -> a
-fsum     = undefined
-fproduct = undefined
+fsum     a = undefined
+fproduct a = undefined
 
 -- | Poker
 
@@ -75,7 +82,20 @@ data Rank = R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 | J | Q | K | A
 -- * Exercise 6
 
 instance Show Rank where
-    show = undefined
+    show R2 = "2"
+    show R3 = "3"
+    show R4 = "4"
+    show R5 = "5"
+    show R6 = "6"
+    show R7 = "7"
+    show R8 = "8"
+    show R9 = "9"
+    show R10 = "10"
+    show J = "J"
+    show Q = "Q"
+    show K = "K"
+    show A = "A"
+
 
 data Suit = S | H | D | C
     deriving (Bounded, Enum, Eq, Ord, Show)
@@ -86,15 +106,19 @@ data Card = Card { rank :: Rank, suit :: Suit }
 -- * Exercise 7
 
 instance Show Card where
-    show (Card { rank = r, suit = s }) = undefined
+    show (Card { rank = r, suit = s }) = "" ++ show r ++ show s
 
 type Deck = [Card]
 
 -- * Exercise 8
 
 fullDeck, piquetDeck :: Deck
-fullDeck   = undefined
-piquetDeck = undefined
+fullDeck   = do r <- (enumFrom R2)
+                s <- (enumFrom S)
+                return (Card { rank = r, suit = s})
+piquetDeck = do r <- (enumFrom R7)
+                s <- (enumFrom S)
+                return (Card { rank = r, suit = s})
 
 newtype Hand = Hand { unHand :: [Card] } deriving (Eq, Show)
 
@@ -111,14 +135,14 @@ data HandCategory
     deriving (Eq, Ord, Show)
     
 -- * Exercise 9
-    
+
 sameSuits :: Hand -> Bool
-sameSuits = undefined
+sameSuits (Hand {unHand = (x:xs)}) = all (==(suit x)) (map suit xs) 
 
 -- * Exercise 10
 
 isStraight :: [Rank] -> Maybe Rank
-isStraight = undefined
+isStraight x = undefined -- | (sort x) == [(head x)..((head x)+4)] = Just 2
 
 -- * Exercise 11
 
