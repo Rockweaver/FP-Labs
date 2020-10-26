@@ -1,4 +1,5 @@
 :load Main.hs
+
 fmap (+1) (MkRose 1 [MkRose 2 [MkRose 21 [], MkRose 22 []], MkRose 3 [], MkRose 4 []]) == (MkRose 2 [MkRose 3 [MkRose 22 [],MkRose 23 []],MkRose 4 [],MkRose 5 []]) &&
 
 show (Card { rank = R3, suit = H})
@@ -17,3 +18,6 @@ ranks ((Hand {unHand = [(Card { rank = R7, suit = H}), (Card { rank = R7, suit =
 count (ranks ((Hand {unHand = [(Card { rank = R7, suit = H}), (Card { rank = R7, suit = D}), (Card { rank = Q, suit = S}), (Card { rank = R7, suit = S}), (Card { rank = Q, suit = H})]})))
 
 order ((Hand {unHand = [(Card { rank = R7, suit = H}), (Card { rank = R7, suit = D}), (Card { rank = Q, suit = S}), (Card { rank = R7, suit = S}), (Card { rank = Q, suit = H})]}))
+
+handCategory ((Hand {unHand = [(Card { rank = R7, suit = H}), (Card { rank = R8, suit = H}), (Card { rank = R9, suit = H}), (Card { rank = R10, suit = H}), (Card { rank = J, suit = H})]}))
+handCategory ((Hand {unHand = [(Card { rank = R7, suit = H}), (Card { rank = R7, suit = D}), (Card { rank = R7, suit = C}), (Card { rank = R7, suit = S}), (Card { rank = R3, suit = H})]}))

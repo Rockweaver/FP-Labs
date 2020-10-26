@@ -165,11 +165,32 @@ order x = zip (n (ranks x)) (m (ranks x))
                     m xm = map head (group xm)
 
 -- * Exercise 13
--- checkCategory :: [(Int, Rank)] -> HandCategory
--- checkCategory x = unzip x
+checkCategory :: ([Int],[Rank]) -> Hand -> HandCategory
+checkCategory (amount, rank) hand   | (sameSuits hand) && ((isStraight rank) /= Nothing) = StraightFlush (head (reverse rank))
+                                    | ((head amount) == 4) = FourOfAKind (head rank) (head (tail rank))
+                                    | ((head (tail amount)) == 4) = FourOfAKind (head (tail rank)) (head rank)
+                                    | False = FullHouse
+                                    | False = Flush
+                                    | False = Straight
+                                    | False = ThreeOfAKind
+                                    | False = TwoPair
+                                    | False = OnePair
+                                    | otherwise = HighCard (reverse rank)
 
--- handCategory :: Hand -> HandCategory
--- handCategory hand = checkCategory (order hand)
+handCategory :: Hand -> HandCategory
+handCategory hand = checkCategory (unzip (order hand)) hand
+
+data HandCategory
+    = HighCard      [Rank]
+    | OnePair       Rank [Rank]
+    | TwoPair       Rank Rank Rank
+    | ThreeOfAKind  Rank Rank Rank
+    | Straight      Rank
+    | Flush         [Rank]
+    | FullHouse     Rank Rank
+    | FourOfAKind   Rank Rank
+    | StraightFlush Rank
+    deriving (Eq, Ord, Show)
 
 -- * Exercise 14
 
